@@ -12,7 +12,18 @@ import { GISCUS } from '../config';
  * The widget also follows the site's light/dark switch, via the `themechange`
  * event dispatched by ThemeToggle.
  */
-const { enabled, repo, repoId, category, categoryId, themeLight, themeDark, lang } = GISCUS;
+const {
+  enabled,
+  repo,
+  repoId,
+  category,
+  categoryId,
+  mapping,
+  inputPosition,
+  themeLight,
+  themeDark,
+  lang,
+} = GISCUS;
 const configured = enabled && repoId !== '' && categoryId !== '';
 ---
 
@@ -26,6 +37,8 @@ const configured = enabled && repoId !== '' && categoryId !== '';
         data-repo-id={repoId}
         data-category={category}
         data-category-id={categoryId}
+        data-mapping={mapping}
+        data-input-position={inputPosition}
         data-theme-light={themeLight}
         data-theme-dark={themeDark}
         data-lang={lang}
@@ -55,10 +68,10 @@ const configured = enabled && repoId !== '' && categoryId !== '';
             script.setAttribute('data-repo-id', mount.dataset.repoId ?? '');
             script.setAttribute('data-category', mount.dataset.category ?? '');
             script.setAttribute('data-category-id', mount.dataset.categoryId ?? '');
-            script.setAttribute('data-mapping', 'pathname');
+            script.setAttribute('data-mapping', mount.dataset.mapping ?? 'pathname');
             script.setAttribute('data-reactions-enabled', '1');
             script.setAttribute('data-emit-metadata', '0');
-            script.setAttribute('data-input-position', 'top');
+            script.setAttribute('data-input-position', mount.dataset.inputPosition ?? 'bottom');
             script.setAttribute('data-theme', giscusTheme());
             script.setAttribute('data-lang', mount.dataset.lang ?? 'it');
             script.setAttribute('data-loading', 'lazy');

@@ -28,11 +28,18 @@ export const SITE = {
  * The ids come from https://giscus.app once Discussions are enabled on the repo.
  */
 export const GISCUS = {
-  enabled: false,
+  enabled: true,
   repo: 'michele-mogul/gdr-site',
-  repoId: '',
+  repoId: 'R_kgDOUAx8mw',
   category: 'Commenti',
-  categoryId: '',
+  categoryId: 'DIC_kwDOUAx8m84DD9gw',
+  /**
+   * How a page is tied to its discussion. `pathname` uses the URL path, so it
+   * survives a title change but not a change of base path or domain.
+   */
+  mapping: 'pathname',
+  /** Where the comment box sits relative to the thread. */
+  inputPosition: 'bottom',
   /** Giscus themes, one per site theme: the widget follows the switch. */
   themeLight: 'light',
   themeDark: 'transparent_dark',
