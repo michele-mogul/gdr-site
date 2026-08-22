@@ -26,25 +26,46 @@ export const SITE = {
 /**
  * Giscus comments. With `enabled: false` nothing is rendered and no JS is shipped.
  * The ids come from https://giscus.app once Discussions are enabled on the repo.
+ *
+ * Typed explicitly rather than `as const`: the fields have to stay plain strings,
+ * or the emptiness check in Comments.astro compares against a literal type and
+ * TypeScript rejects it.
  */
-export const GISCUS = {
+type GiscusConfig = {
+  enabled: boolean;
+  /** owner/repo hosting the Discussions. */
+  repo: string;
+  /** Repository node id (R_...), from giscus.app. */
+  repoId: string;
+  /** Discussion category name. */
+  category: string;
+  /** Category node id (DIC_...), from giscus.app. */
+  categoryId: string;
+  /**
+   * How a page is tied to its discussion. `pathname` uses the URL path, so it
+   * survives a title change but not a change of base path or domain.
+   */
+  mapping: 'pathname' | 'url' | 'title' | 'og:title';
+  /** Where the comment box sits relative to the thread. */
+  inputPosition: 'top' | 'bottom';
+  /** Giscus themes, one per site theme: the widget follows the switch. */
+  themeLight: string;
+  themeDark: string;
+  lang: string;
+};
+
+export const GISCUS: GiscusConfig = {
   enabled: true,
   repo: 'michele-mogul/gdr-site',
   repoId: 'R_kgDOUAx8mw',
   category: 'Commenti',
   categoryId: 'DIC_kwDOUAx8m84DD9gw',
-  /**
-   * How a page is tied to its discussion. `pathname` uses the URL path, so it
-   * survives a title change but not a change of base path or domain.
-   */
   mapping: 'pathname',
-  /** Where the comment box sits relative to the thread. */
   inputPosition: 'bottom',
-  /** Giscus themes, one per site theme: the widget follows the switch. */
   themeLight: 'light',
   themeDark: 'transparent_dark',
   lang: 'it',
-} as const;
+};
 
 /** Collection keys. Source of truth for indexes, feeds and tag pages. */
 export const COLLECTIONS = ['reviews', 'adventures', 'stories', 'blog'] as const;
