@@ -1,0 +1,39 @@
+---
+import { COLLECTIONS, COLLECTION_META, SITE } from '../config';
+
+const current = Astro.url.pathname;
+const isActive = (path: string) => current === `/${path}` || current.startsWith(`/${path}/`);
+---
+
+<header class="border-b border-rule-faint">
+  <div class="mx-auto flex max-w-(--measure-wide) flex-wrap items-baseline gap-x-8 gap-y-3 px-5 py-7">
+    <a href="/" class="font-meta text-meta tracking-[0.18em] text-ink uppercase no-underline">
+      {SITE.title}
+    </a>
+    <nav aria-label="Sezioni del sito" class="font-meta text-meta flex flex-wrap gap-x-5 gap-y-2">
+      {
+        COLLECTIONS.map((collection) => (
+          <a
+            href={`/${COLLECTION_META[collection].path}`}
+            class:list={[
+              'no-underline lowercase tracking-wide',
+              isActive(COLLECTION_META[collection].path)
+                ? 'text-accent'
+                : 'text-ink-muted hover:text-ink',
+            ]}
+            aria-current={isActive(COLLECTION_META[collection].path) ? 'page' : undefined}
+          >
+            {COLLECTION_META[collection].plural}
+          </a>
+        ))
+      }
+      <a
+        href="/tag"
+        class:list={[
+          'no-underline lowercase tracking-wide',
+          isActive('tag') ? 'text-accent' : 'text-ink-muted hover:text-ink',
+        ]}>Tag</a
+      >
+    </nav>
+  </div>
+</header>

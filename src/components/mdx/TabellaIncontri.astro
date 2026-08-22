@@ -1,0 +1,49 @@
+---
+/**
+ * Random table. Rows are auto-numbered 1..n, so the die label matches the
+ * number of rows you actually wrote.
+ *
+ *   <TabellaIncontri title="Incontri nella palude" die="d6" rows={[
+ *     "Tre banditi affamati",
+ *     "Un carro rovesciato",
+ *   ]} />
+ *
+ * Pass `rolls` when the ranges are not one-per-row: ["1-2", "3", "4-6"].
+ */
+interface Props {
+  title?: string;
+  /** Defaults to d{rows.length}. */
+  die?: string;
+  rows: string[];
+  rolls?: string[];
+}
+
+const { title, die, rows, rolls } = Astro.props;
+const label = die ?? `d${rows.length}`;
+const rollFor = (index: number) => rolls?.[index] ?? String(index + 1);
+---
+
+<figure class="not-prose border-rule-faint my-10 border-y py-5">
+  <figcaption class="mb-4 flex items-baseline justify-between gap-4">
+    <span class="text-section font-normal">{title ?? 'Tabella'}</span>
+    <span class="font-meta text-meta text-accent-dim uppercase">{label}</span>
+  </figcaption>
+
+  <table class="w-full border-collapse text-left">
+    <tbody>
+      {
+        rows.map((row, index) => (
+          <tr class="border-rule-faint border-t align-baseline">
+            <th
+              scope="row"
+              class="font-meta text-meta text-ink-faint w-16 py-2 pr-4 font-normal tabular-nums"
+            >
+              {rollFor(index)}
+            </th>
+            <td class="text-ink-muted py-2">{row}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</figure>

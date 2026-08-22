@@ -1,0 +1,65 @@
+---
+import { GISCUS } from '../config';
+
+/**
+ * Giscus, kept in one switchable place: with `GISCUS.enabled: false` this
+ * renders nothing at all — no markup, no script, no third-party request.
+ *
+ * When enabled the widget is still not loaded on page load: an
+ * IntersectionObserver injects it when the container scrolls into view, which
+ * is the `client:visible` behaviour without pulling in a UI framework.
+ */
+const { enabled, repo, repoId, category, categoryId, theme, lang } = GISCUS;
+const configured = enabled && repoId !== '' && categoryId !== '';
+---
+
+{
+  configured && (
+    <section class="border-rule-faint mt-20 border-t pt-10" aria-label="Commenti">
+      <h2 class="font-meta text-meta text-ink-faint mb-6 tracking-[0.18em] uppercase">Commenti</h2>
+      <div
+        id="giscus"
+        data-repo={repo}
+        data-repo-id={repoId}
+        data-category={category}
+        data-category-id={categoryId}
+        data-theme={theme}
+        data-lang={lang}
+      />
+      {/* is:inline keeps this out of the global bundle: with comments off, no page ships a single byte of it. */}
+      <script is:inline>
+        const mount = document.getElementById('giscus');
+
+        if (mount) {
+          const load = () => {
+            const script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            script.setAttribute('data-repo', mount.dataset.repo ?? '');
+            script.setAttribute('data-repo-id', mount.dataset.repoId ?? '');
+            script.setAttribute('data-category', mount.dataset.category ?? '');
+            script.setAttribute('data-category-id', mount.dataset.categoryId ?? '');
+            script.setAttribute('data-mapping', 'pathname');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'top');
+            script.setAttribute('data-theme', mount.dataset.theme ?? 'transparent_dark');
+            script.setAttribute('data-lang', mount.dataset.lang ?? 'it');
+            script.setAttribute('data-loading', 'lazy');
+            mount.appendChild(script);
+          };
+
+          const observer = new IntersectionObserver((entries) => {
+            if (entries.some((entry) => entry.isIntersecting)) {
+              observer.disconnect();
+              load();
+            }
+          });
+
+          observer.observe(mount);
+        }
+      </script>
+    </section>
+  )
+}

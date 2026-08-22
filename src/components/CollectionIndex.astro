@@ -1,0 +1,25 @@
+---
+import EntryList from './EntryList.astro';
+import { COLLECTION_META, type Collection } from '../config';
+import { loadCollection, toCard } from '../lib/content';
+
+interface Props {
+  collection: Collection;
+}
+
+const { collection } = Astro.props;
+const meta = COLLECTION_META[collection];
+const cards = (await loadCollection(collection)).map(toCard);
+const count = cards.length;
+---
+
+<header class="mb-12">
+  <h1 class="text-display font-normal">{meta.plural}</h1>
+  <p class="text-lead text-ink-muted mt-4 max-w-(--measure) text-pretty">{meta.description}</p>
+  <p class="font-meta text-meta text-ink-faint mt-6 flex flex-wrap gap-4">
+    <span>{count} {count === 1 ? meta.singular.toLowerCase() : meta.plural.toLowerCase()}</span>
+    <a href={`/${meta.path}/rss.xml`}>RSS di questa sezione</a>
+  </p>
+</header>
+
+<EntryList cards={cards} showKicker={false} empty={`Ancora nessun contenuto in ${meta.plural.toLowerCase()}.`} />

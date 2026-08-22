@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionIndex from '../../components/CollectionIndex.astro';
+import { COLLECTION_META } from '../../config';
+
+const meta = COLLECTION_META['blog'];
+---
+
+<BaseLayout title={meta.plural} description={meta.description}>
+  <CollectionIndex collection="blog" />
+</BaseLayout>

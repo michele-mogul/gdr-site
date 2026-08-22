@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EntryList from '../../components/EntryList.astro';
+import { tagIndex, toCard, type Entry } from '../../lib/content';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const index = await tagIndex();
+  return [...index.entries()].map(([slug, group]) => ({
+    params: { tag: slug },
+    props: { label: group.label, entries: group.entries },
+  }));
+};
+
+type Props = { label: string; entries: Entry[] };
+
+const { label, entries } = Astro.props;
+const cards = entries.map(toCard);
+---
+
+<BaseLayout
+  title={`#${label}`}
+  description={`Contenuti taggati ${label}, in tutte le sezioni del sito.`}
+>
+  <header class="mb-12">
+    <p class="font-meta text-meta text-ink-faint tracking-[0.18em] uppercase">
+      <a href="/tag" class="hover:text-accent">Tag</a>
+    </p>
+    <h1 class="text-display mt-3 font-normal">#{label}</h1>
+    <p class="font-meta text-meta text-ink-faint mt-4">
+      {cards.length}
+      {cards.length === 1 ? 'contenuto' : 'contenuti'}
+    </p>
+  </header>
+
+  <EntryList cards={cards} />
+</BaseLayout>

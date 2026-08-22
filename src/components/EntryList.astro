@@ -1,0 +1,25 @@
+---
+import EntryCard from './EntryCard.astro';
+import type { Card } from '../lib/content';
+
+interface Props {
+  cards: Card[];
+  showKicker?: boolean;
+  /** Shown when there is nothing to list. */
+  empty?: string;
+}
+
+const { cards, showKicker = true, empty = 'Ancora niente qui.' } = Astro.props;
+---
+
+{
+  cards.length === 0 ? (
+    <p class="text-ink-faint border-rule-faint border-t py-10">{empty}</p>
+  ) : (
+    <div class="border-rule-faint border-t">
+      {cards.map((card) => (
+        <EntryCard card={card} showKicker={showKicker} />
+      ))}
+    </div>
+  )
+}

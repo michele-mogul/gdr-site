@@ -1,0 +1,24 @@
+---
+interface Props {
+  /** Absolute URL, normally on Cloudflare R2. */
+  href: string;
+  /** Human-readable size, e.g. "4,2 MB". */
+  size?: string | undefined;
+  title: string;
+}
+
+const { href, size, title } = Astro.props;
+---
+
+<a
+  href={href}
+  download
+  rel="noopener"
+  class="border-accent text-accent hover:bg-accent hover:text-ground font-meta group not-prose my-10 flex items-baseline justify-between gap-6 border px-5 py-4 no-underline transition-colors"
+>
+  <span class="flex flex-col gap-1">
+    <span class="text-base tracking-wide">Scarica il PDF</span>
+    <span class="text-meta opacity-80">{title}{size ? ` — ${size}` : ''}</span>
+  </span>
+  <span aria-hidden="true" class="text-lead">↓</span>
+</a>

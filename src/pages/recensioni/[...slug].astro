@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import EntryLayout from '../../layouts/EntryLayout.astro';
+import { mdxComponents } from '../../components/mdx';
+import { collectionPaths } from '../../lib/content';
+
+export const getStaticPaths = () => collectionPaths('reviews');
+
+type Props = { entry: CollectionEntry<'reviews'> };
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<EntryLayout entry={entry}>
+  <Content components={mdxComponents} />
+</EntryLayout>

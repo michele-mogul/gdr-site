@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EntryList from '../components/EntryList.astro';
+import { COLLECTIONS, COLLECTION_META, SITE } from '../config';
+import { loadEverything, toCard } from '../lib/content';
+
+const cards = (await loadEverything()).slice(0, 15).map(toCard);
+---
+
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <section class="mb-16">
+    <h1 class="text-display font-normal text-balance">{SITE.title}</h1>
+    <p class="text-lead text-ink-muted mt-5 max-w-(--measure) text-pretty">{SITE.description}</p>
+    <nav class="font-meta text-meta text-ink-faint mt-8 flex flex-wrap gap-x-6 gap-y-2">
+      {
+        COLLECTIONS.map((collection) => (
+          <a href={`/${COLLECTION_META[collection].path}`} class="hover:text-accent">
+            {COLLECTION_META[collection].plural}
+          </a>
+        ))
+      }
+      <a href="/rss.xml" class="hover:text-accent">RSS</a>
+    </nav>
+  </section>
+
+  <h2 class="font-meta text-meta text-ink-faint mb-2 tracking-[0.18em] uppercase">Ultimi</h2>
+  <EntryList cards={cards} empty="Il sito è pronto, i contenuti no." />
+</BaseLayout>

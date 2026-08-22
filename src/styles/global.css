@@ -89,3 +89,78 @@
     text-decoration-color: var(--color-accent);
   }
 }
+
+/*
+ * Long-form styling: @tailwindcss/typography, retuned on the site tokens.
+ * Applied as `prose prose-invert prose-site` so the plugin's dark palette is
+ * the starting point and these variables do the rest.
+ */
+/* Unlayered on purpose: the typography plugin's own rules sit in a cascade
+ * layer, and unlayered CSS wins over layered CSS whatever the specificity. */
+.prose-site {
+  --tw-prose-invert-body: var(--color-ink-muted);
+  --tw-prose-invert-headings: var(--color-ink);
+  --tw-prose-invert-lead: var(--color-ink-muted);
+  --tw-prose-invert-links: var(--color-ink);
+  --tw-prose-invert-bold: var(--color-ink);
+  --tw-prose-invert-counters: var(--color-ink-faint);
+  --tw-prose-invert-bullets: var(--color-rule);
+  --tw-prose-invert-hr: var(--color-rule-faint);
+  --tw-prose-invert-quotes: var(--color-ink);
+  --tw-prose-invert-quote-borders: var(--color-accent-dim);
+  --tw-prose-invert-captions: var(--color-ink-faint);
+  --tw-prose-invert-code: var(--color-ink);
+  --tw-prose-invert-pre-bg: var(--color-raised);
+  --tw-prose-invert-th-borders: var(--color-rule);
+  --tw-prose-invert-td-borders: var(--color-rule-faint);
+
+  font-family: var(--font-prose);
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+}
+
+/* Headings sit in the same serif at normal weight: size and space do the work. */
+.prose-site :is(h2, h3, h4) {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.prose-site h2 {
+  font-size: var(--text-section);
+  margin-top: 2.4em;
+}
+
+.prose-site a {
+  text-decoration-color: var(--color-accent-dim);
+  text-underline-offset: 0.22em;
+}
+
+.prose-site :is(code, pre, kbd) {
+  font-family: var(--font-meta);
+  font-size: 0.85em;
+}
+
+.prose-site pre {
+  border: 1px solid var(--color-rule-faint);
+  border-radius: 0;
+}
+
+.prose-site blockquote {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* A short rule instead of a full-width one: less furniture. */
+.prose-site hr {
+  width: 6rem;
+  margin-inline: auto;
+  margin-block: 3.5em;
+}
+
+/* Captions and data tables in mono — but never inside a .not-prose block,
+ * where the MDX components style themselves. */
+.prose-site
+  :is(figcaption, table):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  font-family: var(--font-meta);
+  font-size: 0.9em;
+}

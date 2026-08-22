@@ -1,0 +1,58 @@
+---
+import type { ImageMetadata } from 'astro';
+import Seo from '../components/Seo.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { SITE } from '../config';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: ImageMetadata | undefined;
+  imageAlt?: string | undefined;
+  type?: 'website' | 'article';
+  publishedDate?: Date | undefined;
+  tags?: readonly string[] | undefined;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  image,
+  imageAlt,
+  type = 'website',
+  publishedDate,
+  tags,
+  noindex = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <Seo
+      title={title}
+      description={description}
+      image={image}
+      imageAlt={imageAlt}
+      type={type}
+      publishedDate={publishedDate}
+      tags={tags}
+      noindex={noindex}
+    />
+  </head>
+  <body class="bg-ground text-ink flex min-h-screen flex-col">
+    <a
+      href="#contenuto"
+      class="font-meta text-meta bg-accent text-ground sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:px-3 focus:py-2"
+      >Salta al contenuto</a
+    >
+    <SiteHeader />
+    <main id="contenuto" class="mx-auto w-full max-w-(--measure-wide) grow px-5 py-14">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

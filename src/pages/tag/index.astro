@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { tagIndex } from '../../lib/content';
+
+const groups = [...(await tagIndex()).entries()]
+  .map(([slug, group]) => ({ slug, label: group.label, count: group.entries.length }))
+  .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'it'));
+---
+
+<BaseLayout
+  title="Tag"
+  description="Tutti i tag del sito: attraversano recensioni, avventure, racconti e blog."
+>
+  <header class="mb-12">
+    <h1 class="text-display font-normal">Tag</h1>
+    <p class="text-lead text-ink-muted mt-4 max-w-(--measure) text-pretty">
+      I tag attraversano le quattro sezioni: lo stesso tag può tenere insieme una recensione, un
+      racconto e l'avventura che ne è venuta fuori.
+    </p>
+  </header>
+
+  {
+    groups.length === 0 ? (
+      <p class="text-ink-faint">Nessun tag: nessun contenuto pubblicato.</p>
+    ) : (
+      <ul class="border-rule-faint border-t">
+        {groups.map((group) => (
+          <li class="border-rule-faint flex items-baseline justify-between gap-6 border-b py-3">
+            <a href={`/tag/${group.slug}`} class="text-base">
+              #{group.label}
+            </a>
+            <span class="font-meta text-meta text-ink-faint tabular-nums">{group.count}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+/**
+ * Pull quote from a manual or from the table.
+ *
+ *   <Citazione source="Mörk Borg, p. 12">
+ *     Il mondo finisce. Fatevene una ragione.
+ *   </Citazione>
+ */
+interface Props {
+  /** Book, page, person: whatever the quote comes from. */
+  source?: string;
+  /** Optional link for the source. */
+  href?: string;
+}
+
+const { source, href } = Astro.props;
+---
+
+<figure class="not-prose my-10">
+  <blockquote class="border-accent-dim text-lead text-ink border-l-2 pl-6 italic">
+    <slot />
+  </blockquote>
+  {
+    source && (
+      <figcaption class="font-meta text-meta text-ink-faint mt-3 pl-6">
+        — {href ? <a href={href}>{source}</a> : source}
+      </figcaption>
+    )
+  }
+</figure>

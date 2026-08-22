@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets';
+import Comments from '../components/Comments.astro';
+import PdfDownload from '../components/PdfDownload.astro';
+import PostedOn from '../components/PostedOn.astro';
+import Rating from '../components/Rating.astro';
+import TagList from '../components/TagList.astro';
+import { COLLECTION_META } from '../config';
+import { toCard, type Entry } from '../lib/content';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  entry: Entry;
+}
+
+const { entry } = Astro.props;
+const card = toCard(entry);
+const meta = COLLECTION_META[entry.collection];
+
+/** Book covers are portrait: full width would turn them into a poster. */
+const portrait = card.image ? card.image.height > card.image.width : false;
+
+/** Per-collection fact sheet, printed as a dense definition list under the title. */
+const facts: [string, string][] = [];
+
+if (entry.collection === 'reviews') {
+  const { system, publisher, year, pages, format } = entry.data;
+  facts.push(
+    ['Sistema', system],
+    ['Editore', publisher],
+    ['Anno', String(year)],
+    ['Pagine', String(pages)],
+    ['Formato', format],
+  );
+}
+
+if (entry.collection === 'adventures') {
+  const { system, levels, players, hours } = entry.data;
+  const range = (r: { min: number; max: number }) => (r.min === r.max ? `${r.min}` : `${r.min}–${r.max}`);
+  facts.push(
+    ['Sistema', system],
+    ['Livelli', range(levels)],
+    ['Giocatori', range(players)],
+    ['Durata', `${String(hours).replace('.', ',')} ore`],
+  );
+}
+
+if (entry.collection === 'stories') {
+  facts.push(['Lettura', `${entry.data.readingTime} min`]);
+}
+---
+
+<BaseLayout
+  title={card.title}
+  description={card.excerpt}
+  image={card.image}
+  imageAlt={card.imageAlt}
+  type="article"
+  publishedDate={card.date}
+  tags={card.tags}
+  noindex={card.draft}
+>
+  <article>
+    <header class="border-rule-faint border-b pb-8">
+      <p class="font-meta text-meta text-accent-dim flex flex-wrap gap-3 tracking-[0.16em] uppercase">
+        <a href={`/${meta.path}`} class="no-underline hover:text-accent">{meta.singular}</a>
+        {card.draft && <span class="border-accent text-accent border px-1.5 normal-case">bozza</span>}
+      </p>
+
+      <h1 class="text-display mt-4 font-normal text-balance">{card.title}</h1>
+
+      <p class="text-lead text-ink-muted mt-5 max-w-(--measure) text-pretty">{card.excerpt}</p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <PostedOn date={card.date} />
+        {card.rating !== undefined && <Rating value={card.rating} />}
+      </div>
+
+      {
+        facts.length > 0 && (
+          <dl class="font-meta text-meta text-ink-muted mt-6 flex flex-wrap gap-x-8 gap-y-2">
+            {facts.map(([label, value]) => (
+              <div class="flex gap-2">
+                <dt class="text-ink-faint uppercase">{label}</dt>
+                <dd class="text-ink">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </header>
+
+    {
+      card.image && (
+        <figure class:list={['my-10', portrait && 'max-w-72']}>
+          <Image
+            src={card.image}
+            alt={card.imageAlt ?? ''}
+            width={portrait ? 576 : 1200}
+            class="border-rule-faint w-full border"
+            loading="eager"
+          />
+        </figure>
+      )
+    }
+
+    {
+      entry.collection === 'adventures' && entry.data.pdf && (
+        <PdfDownload href={entry.data.pdf} size={entry.data.pdfSize} title={card.title} />
+      )
+    }
+
+    <div class="prose prose-invert prose-site mt-10 max-w-(--measure)">
+      <slot />
+    </div>
+
+    <footer class="border-rule-faint mt-12 border-t pt-6">
+      <TagList tags={card.tags} />
+    </footer>
+
+    <Comments />
+  </article>
+</BaseLayout>

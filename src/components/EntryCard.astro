@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import PostedOn from './PostedOn.astro';
+import Rating from './Rating.astro';
+import TagList from './TagList.astro';
+import type { Card } from '../lib/content';
+
+interface Props {
+  card: Card;
+  /** Hides the collection kicker on single-collection indexes. */
+  showKicker?: boolean;
+}
+
+const { card, showKicker = true } = Astro.props;
+---
+
+<article class="border-rule-faint grid gap-5 border-b py-8 sm:grid-cols-[1fr_auto] sm:gap-8">
+  <div class="flex flex-col gap-3">
+    <p class="font-meta text-meta text-ink-faint flex flex-wrap items-center gap-x-3 gap-y-1">
+      {
+        showKicker && (
+          <span class="text-accent-dim tracking-[0.16em] uppercase">{card.kicker}</span>
+        )
+      }
+      <PostedOn date={card.date} class="text-ink-faint" />
+      {card.draft && <span class="border-accent text-accent border px-1.5">bozza</span>}
+    </p>
+
+    <h2 class="text-section font-normal text-balance">
+      <a href={card.href} class="decoration-transparent hover:decoration-accent">{card.title}</a>
+    </h2>
+
+    <p class="text-ink-muted max-w-(--measure)">{card.excerpt}</p>
+
+    <div class="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2">
+      <TagList tags={card.tags} />
+      {card.rating !== undefined && <Rating value={card.rating} />}
+      {
+        card.readingTime !== undefined && (
+          <span class="font-meta text-meta text-ink-faint">{card.readingTime} min di lettura</span>
+        )
+      }
+      {
+        card.pdf && (
+          <span class="font-meta text-meta text-accent-dim">PDF</span>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    card.image && (
+      <a href={card.href} class="order-first sm:order-none" tabindex="-1" aria-hidden="true">
+        <Image
+          src={card.image}
+          alt={card.imageAlt ?? ''}
+          width={220}
+          class="border-rule-faint h-32 w-full border object-cover sm:h-28 sm:w-20"
+          loading="lazy"
+        />
+      </a>
+    )
+  }
+</article>
