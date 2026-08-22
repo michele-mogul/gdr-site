@@ -7,6 +7,7 @@ import Rating from '../components/Rating.astro';
 import TagList from '../components/TagList.astro';
 import { COLLECTION_META } from '../config';
 import { toCard, type Entry } from '../lib/content';
+import { href } from '../lib/href';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -63,7 +64,7 @@ if (entry.collection === 'stories') {
   <article>
     <header class="border-rule-faint border-b pb-8">
       <p class="font-meta text-meta text-accent-dim flex flex-wrap gap-3 tracking-[0.16em] uppercase">
-        <a href={`/${meta.path}`} class="no-underline hover:text-accent">{meta.singular}</a>
+        <a href={href(`/${meta.path}`)} class="no-underline hover:text-accent">{meta.singular}</a>
         {card.draft && <span class="border-accent text-accent border px-1.5 normal-case">bozza</span>}
       </p>
 

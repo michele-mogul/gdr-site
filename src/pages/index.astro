@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import EntryList from '../components/EntryList.astro';
 import { COLLECTIONS, COLLECTION_META, SITE } from '../config';
 import { loadEverything, toCard } from '../lib/content';
+import { href } from '../lib/href';
 
 const cards = (await loadEverything()).slice(0, 15).map(toCard);
 ---
@@ -14,12 +15,12 @@ const cards = (await loadEverything()).slice(0, 15).map(toCard);
     <nav class="font-meta text-meta text-ink-faint mt-8 flex flex-wrap gap-x-6 gap-y-2">
       {
         COLLECTIONS.map((collection) => (
-          <a href={`/${COLLECTION_META[collection].path}`} class="hover:text-accent">
+          <a href={href(`/${COLLECTION_META[collection].path}`)} class="hover:text-accent">
             {COLLECTION_META[collection].plural}
           </a>
         ))
       }
-      <a href="/rss.xml" class="hover:text-accent">RSS</a>
+      <a href={href("/rss.xml")} class="hover:text-accent">RSS</a>
     </nav>
   </section>
 

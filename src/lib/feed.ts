@@ -23,7 +23,9 @@ export function buildFeed(
   return rss({
     title: options.title,
     description: options.description,
-    site: context.site ?? SITE.url,
+    // Channel link points at the site root *including* the base path, so the
+    // feed is right both at a domain root and under /gdr-site.
+    site: new URL(import.meta.env.BASE_URL, context.site ?? SITE.url),
     items: options.entries.map(toFeedItem),
     customData: `<language>${SITE.lang}</language><copyright>${SITE.copyright}</copyright>`,
     trailingSlash: false,

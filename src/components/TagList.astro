@@ -1,5 +1,6 @@
 ---
 import { tagSlug } from '../lib/content';
+import { href } from '../lib/href';
 
 interface Props {
   tags: readonly string[];
@@ -14,7 +15,7 @@ const { tags, class: className } = Astro.props;
     <ul class:list={['font-meta text-meta flex flex-wrap gap-x-3 gap-y-1', className]}>
       {tags.map((tag) => (
         <li>
-          <a href={`/tag/${tagSlug(tag)}`} class="text-ink-faint hover:text-accent no-underline">
+          <a href={href(`/tag/${tagSlug(tag)}`)} class="text-ink-faint hover:text-accent no-underline">
             #{tag}
           </a>
         </li>

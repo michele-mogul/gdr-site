@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { href } from '../lib/href';
 ---
 
 <BaseLayout title="Pagina non trovata" description="Qui non c'è niente." noindex>
   <h1 class="text-display font-normal">404</h1>
   <p class="text-lead text-ink-muted mt-5 max-w-(--measure)">
-    Questa pagina non esiste, o non esiste più. Prova dalla <a href="/">home</a> o dai
-    <a href="/tag">tag</a>.
+    Questa pagina non esiste, o non esiste più. Prova dalla <a href={href("/")}>home</a> o dai
+    <a href={href("/tag")}>tag</a>.
   </p>
 </BaseLayout>

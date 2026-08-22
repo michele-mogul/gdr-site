@@ -1,20 +1,24 @@
 ---
 import { COLLECTIONS, COLLECTION_META, SITE } from '../config';
+import { href } from '../lib/href';
 
 const current = Astro.url.pathname;
-const isActive = (path: string) => current === `/${path}` || current.startsWith(`/${path}/`);
+const isActive = (path: string) => {
+  const target = href('/' + path);
+  return current === target || current.startsWith(target + '/');
+};
 ---
 
 <header class="border-b border-rule-faint">
   <div class="mx-auto flex max-w-(--measure-wide) flex-wrap items-baseline gap-x-8 gap-y-3 px-5 py-7">
-    <a href="/" class="font-meta text-meta tracking-[0.18em] text-ink uppercase no-underline">
+    <a href={href("/")} class="font-meta text-meta tracking-[0.18em] text-ink uppercase no-underline">
       {SITE.title}
     </a>
     <nav aria-label="Sezioni del sito" class="font-meta text-meta flex flex-wrap gap-x-5 gap-y-2">
       {
         COLLECTIONS.map((collection) => (
           <a
-            href={`/${COLLECTION_META[collection].path}`}
+            href={href(`/${COLLECTION_META[collection].path}`)}
             class:list={[
               'no-underline lowercase tracking-wide',
               isActive(COLLECTION_META[collection].path)
@@ -28,7 +32,7 @@ const isActive = (path: string) => current === `/${path}` || current.startsWith(
         ))
       }
       <a
-        href="/tag"
+        href={href("/tag")}
         class:list={[
           'no-underline lowercase tracking-wide',
           isActive('tag') ? 'text-accent' : 'text-ink-muted hover:text-ink',

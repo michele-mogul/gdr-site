@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { tagIndex } from '../../lib/content';
+import { href } from '../../lib/href';
 
 const groups = [...(await tagIndex()).entries()]
   .map(([slug, group]) => ({ slug, label: group.label, count: group.entries.length }))
@@ -26,7 +27,7 @@ const groups = [...(await tagIndex()).entries()]
       <ul class="border-rule-faint border-t">
         {groups.map((group) => (
           <li class="border-rule-faint flex items-baseline justify-between gap-6 border-b py-3">
-            <a href={`/tag/${group.slug}`} class="text-base">
+            <a href={href(`/tag/${group.slug}`)} class="text-base">
               #{group.label}
             </a>
             <span class="font-meta text-meta text-ink-faint tabular-nums">{group.count}</span>

@@ -2,6 +2,7 @@
 import EntryList from './EntryList.astro';
 import { COLLECTION_META, type Collection } from '../config';
 import { loadCollection, toCard } from '../lib/content';
+import { href } from '../lib/href';
 
 interface Props {
   collection: Collection;
@@ -18,7 +19,7 @@ const count = cards.length;
   <p class="text-lead text-ink-muted mt-4 max-w-(--measure) text-pretty">{meta.description}</p>
   <p class="font-meta text-meta text-ink-faint mt-6 flex flex-wrap gap-4">
     <span>{count} {count === 1 ? meta.singular.toLowerCase() : meta.plural.toLowerCase()}</span>
-    <a href={`/${meta.path}/rss.xml`}>RSS di questa sezione</a>
+    <a href={href(`/${meta.path}/rss.xml`)}>RSS di questa sezione</a>
   </p>
 </header>
 

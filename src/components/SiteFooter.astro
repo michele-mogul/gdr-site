@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../config';
+import { href } from '../lib/href';
 ---
 
 <footer class="border-t border-rule-faint mt-24">
@@ -8,8 +9,8 @@ import { SITE } from '../config';
   >
     <p>{SITE.copyright}</p>
     <p class="flex gap-4">
-      <a href="/rss.xml">RSS</a>
-      <a href="/sitemap-index.xml">Sitemap</a>
+      <a href={href("/rss.xml")}>RSS</a>
+      <a href={href("/sitemap-index.xml")}>Sitemap</a>
     </p>
   </div>
 </footer>

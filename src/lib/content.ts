@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
+import { href } from './href';
 import { COLLECTIONS, COLLECTION_META, type Collection } from '../config';
 
 /**
@@ -64,7 +65,7 @@ export async function tagIndex(): Promise<Map<string, { label: string; entries: 
 
 /** Canonical path of an entry. Collection keys are English, URL segments Italian. */
 export function entryPath(entry: Entry): string {
-  return `/${COLLECTION_META[entry.collection].path}/${entry.id}`;
+  return href(`/${COLLECTION_META[entry.collection].path}/${entry.id}`);
 }
 
 /** Everything a card needs, flattened out of the four different shapes. */

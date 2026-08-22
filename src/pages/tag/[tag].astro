@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EntryList from '../../components/EntryList.astro';
 import { tagIndex, toCard, type Entry } from '../../lib/content';
+import { href } from '../../lib/href';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const index = await tagIndex();
@@ -24,7 +25,7 @@ const cards = entries.map(toCard);
 >
   <header class="mb-12">
     <p class="font-meta text-meta text-ink-faint tracking-[0.18em] uppercase">
-      <a href="/tag" class="hover:text-accent">Tag</a>
+      <a href={href("/tag")} class="hover:text-accent">Tag</a>
     </p>
     <h1 class="text-display mt-3 font-normal">#{label}</h1>
     <p class="font-meta text-meta text-ink-faint mt-4">

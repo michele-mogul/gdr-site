@@ -5,8 +5,19 @@ import tailwindcss from '@tailwindcss/vite';
 import { SITE } from './src/config';
 
 // https://astro.build/config
+/*
+ * Both the origin and the sub-path are overridable from the environment, so the
+ * same source builds for GitHub Pages (michele-mogul.github.io/gdr-site) and,
+ * later, for a domain of its own:
+ *
+ *   PUBLIC_SITE_URL=https://esempio.it BASE_PATH=/ npm run build
+ */
+const site = process.env.PUBLIC_SITE_URL ?? SITE.url;
+const base = process.env.BASE_PATH ?? SITE.base;
+
 export default defineConfig({
-  site: SITE.url,
+  site,
+  base,
   // No hydrated islands by default: JS is opted into with client:visible
   // on the few components that actually need it (Giscus).
   prefetch: false,

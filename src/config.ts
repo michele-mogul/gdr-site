@@ -3,8 +3,17 @@
  * read both by `astro.config.ts` and by the pages.
  */
 export const SITE = {
-  /** No trailing slash. Used by RSS, sitemap and OpenGraph: must be the production URL. */
-  url: 'https://gdr.example.com',
+  /**
+   * No trailing slash. Used by RSS, sitemap and OpenGraph.
+   * Defaults to the GitHub Pages preview; override with the PUBLIC_SITE_URL
+   * env var (see astro.config.ts) once a real domain exists.
+   */
+  url: 'https://michele-mogul.github.io',
+  /**
+   * Sub-path the site is served from. GitHub Pages project sites live under
+   * /<repo>; on a domain of its own this becomes '/'. Override with BASE_PATH.
+   */
+  base: '/gdr-site',
   title: 'Nome del sito',
   /** Default <meta name="description"> and feed description. */
   description: 'Recensioni di giochi di ruolo, avventure giocabili, racconti e appunti.',

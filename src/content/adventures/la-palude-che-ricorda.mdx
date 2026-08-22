@@ -1,0 +1,65 @@
+---
+title: La palude che ricorda
+system: Cairn
+levels: { min: 1, max: 3 }
+players: { min: 3, max: 5 }
+hours: 4
+pdf: https://files.example.com/gdr/la-palude-che-ricorda.pdf
+pdfSize: 4,2 MB
+date: 2026-02-01
+tags: [one-shot, cairn, palude, morti]
+excerpt: "Una one-shot da una serata: un villaggio che affoga, una palude che restituisce i morti e tre finali possibili, nessuno pulito."
+image: ../../assets/adventures/palude.png
+imageAlt: Palude notturna con una striscia di luce sull'acqua
+---
+
+Il villaggio di Belmare paga da trent'anni un tributo alla palude: un corpo l'anno,
+sepolto nel fango prima del disgelo. Quest'anno la palude ha alzato il prezzo, e i morti
+degli ultimi trent'anni stanno tornando a chiedere perché.
+
+## Innesco
+
+I personaggi arrivano mentre si scava la quarta fossa della settimana. Nessuno dei
+presenti dirà di cosa si tratta: chiedete a chi scava, non a chi guarda.
+
+## Cosa sanno gli abitanti
+
+- **Il becchino** sa tutto e non parla finché non gli si offre di andarsene con voi.
+- **La levatrice** tiene il registro dei tributi. Il registro è incompleto per un anno solo.
+- **Il figlio del capovillaggio** ha rubato qualcosa dal fango tre mesi fa. È tutto lì.
+
+<TabellaIncontri
+  title="Incontri nella palude"
+  die="d6"
+  rows={[
+    'Tre banditi affamati, disposti a trattare per del cibo',
+    'Un carro rovesciato, ancora carico, con impronte che si allontanano',
+    'Una processione di lanterne senza nessuno che le regga',
+    "Il corpo di un annegato che parla, e conosce il nome di un personaggio",
+    'Zanzare: Resistenza o 1d4 danni e febbre per un giorno',
+    'Un ponte di assi che regge una sola persona per volta',
+  ]}
+/>
+
+## Il cuore
+
+Sotto il livello dell'acqua c'è una camera di legno annerito. Chi la trova capisce due
+cose in fretta: la palude non è mai stata affamata, e il tributo lo aveva chiesto
+qualcun altro.
+
+<Statblock
+  name="Annegata paziente"
+  meta="Non-morta, taglia media"
+  stats={{ CA: 12, PF: 14, Morale: 12, Velocità: '6 m in acqua' }}
+>
+  Non attacca chi la chiama per nome. Chi le mente perde 1d6 punti Volontà e sogna la
+  palude per una settimana.
+</Statblock>
+
+## Le tre uscite
+
+1. **Restituire il maltolto.** La palude si calma, il villaggio resta com'è.
+2. **Bruciare la camera.** I morti si fermano, l'acqua sale di un metro l'anno.
+3. **Prendere il posto di chi chiedeva il tributo.** Il tavolo capirà da solo cosa vuol dire.
+
+Nessuna delle tre chiude la storia in modo pulito, ed è voluto.
