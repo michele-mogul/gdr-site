@@ -33,8 +33,9 @@ export const GISCUS = {
   repoId: '',
   category: 'Commenti',
   categoryId: '',
-  /** Giscus theme, matching the site's dark palette. */
-  theme: 'transparent_dark',
+  /** Giscus themes, one per site theme: the widget follows the switch. */
+  themeLight: 'light',
+  themeDark: 'transparent_dark',
   lang: 'it',
 } as const;
 

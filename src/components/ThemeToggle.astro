@@ -52,6 +52,8 @@
         // Private mode or storage disabled: the choice just lasts this page.
       }
       render();
+      // Anything embedded that has its own theme (Giscus) listens for this.
+      document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
     });
 
     // Follow the system while no explicit choice has been made.

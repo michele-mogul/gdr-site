@@ -8,8 +8,11 @@ import { GISCUS } from '../config';
  * When enabled the widget is still not loaded on page load: an
  * IntersectionObserver injects it when the container scrolls into view, which
  * is the `client:visible` behaviour without pulling in a UI framework.
+ *
+ * The widget also follows the site's light/dark switch, via the `themechange`
+ * event dispatched by ThemeToggle.
  */
-const { enabled, repo, repoId, category, categoryId, theme, lang } = GISCUS;
+const { enabled, repo, repoId, category, categoryId, themeLight, themeDark, lang } = GISCUS;
 const configured = enabled && repoId !== '' && categoryId !== '';
 ---
 
@@ -23,14 +26,26 @@ const configured = enabled && repoId !== '' && categoryId !== '';
         data-repo-id={repoId}
         data-category={category}
         data-category-id={categoryId}
-        data-theme={theme}
+        data-theme-light={themeLight}
+        data-theme-dark={themeDark}
         data-lang={lang}
       />
       {/* is:inline keeps this out of the global bundle: with comments off, no page ships a single byte of it. */}
       <script is:inline>
-        const mount = document.getElementById('giscus');
+        (() => {
+          const mount = document.getElementById('giscus');
+          if (!mount) return;
 
-        if (mount) {
+          const isLight = () =>
+            (document.documentElement.dataset.theme ??
+              (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')) ===
+            'light';
+
+          const giscusTheme = () =>
+            isLight()
+              ? (mount.dataset.themeLight ?? 'light')
+              : (mount.dataset.themeDark ?? 'transparent_dark');
+
           const load = () => {
             const script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
@@ -44,7 +59,7 @@ const configured = enabled && repoId !== '' && categoryId !== '';
             script.setAttribute('data-reactions-enabled', '1');
             script.setAttribute('data-emit-metadata', '0');
             script.setAttribute('data-input-position', 'top');
-            script.setAttribute('data-theme', mount.dataset.theme ?? 'transparent_dark');
+            script.setAttribute('data-theme', giscusTheme());
             script.setAttribute('data-lang', mount.dataset.lang ?? 'it');
             script.setAttribute('data-loading', 'lazy');
             mount.appendChild(script);
@@ -58,7 +73,18 @@ const configured = enabled && repoId !== '' && categoryId !== '';
           });
 
           observer.observe(mount);
-        }
+
+          // Repaint the widget when the site theme changes. The iframe only
+          // exists once Giscus has loaded, so this is a no-op before that.
+          document.addEventListener('themechange', () => {
+            const frame = document.querySelector('iframe.giscus-frame');
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(
+              { giscus: { setConfig: { theme: giscusTheme() } } },
+              'https://giscus.app',
+            );
+          });
+        })();
       </script>
     </section>
   )
