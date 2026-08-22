@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/*
+ * Theme tokens. Tailwind 4 is configured here, not in tailwind.config.js:
+ * every @theme variable generates the matching utilities
+ * (--color-accent -> text-accent, bg-accent, border-accent...).
+ *
+ * Register: dark ground, warm ink, one accent, no gradients, no shadows.
+ * Hierarchy comes from type, not from colour.
+ */
+@theme {
+  /* Surfaces */
+  --color-ground: oklch(0.165 0.006 260);
+  --color-raised: oklch(0.205 0.007 260);
+  --color-rule: oklch(0.31 0.008 260);
+  --color-rule-faint: oklch(0.245 0.007 260);
+
+  /* Text */
+  --color-ink: oklch(0.925 0.012 85);
+  --color-ink-muted: oklch(0.72 0.012 85);
+  --color-ink-faint: oklch(0.58 0.01 85);
+
+  /* The single accent: links, rating, PDF button */
+  --color-accent: oklch(0.8 0.13 70);
+  --color-accent-dim: oklch(0.62 0.12 70);
+
+  /* Serif for long-form, mono for metadata: two families, no more */
+  --font-prose:
+    'Iowan Old Style', 'Palatino Linotype', Palatino, 'Source Serif 4', Georgia, 'Times New Roman',
+    serif;
+  --font-meta:
+    ui-monospace, 'SF Mono', SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* Type scale: few steps, sharp jumps */
+  --text-meta: 0.78rem;
+  --text-meta--line-height: 1.5;
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.7;
+  --text-lead: 1.3rem;
+  --text-lead--line-height: 1.55;
+  --text-display: clamp(1.9rem, 1.3rem + 2.2vw, 3rem);
+  --text-display--line-height: 1.08;
+  --text-section: clamp(1.35rem, 1.1rem + 1vw, 1.7rem);
+  --text-section--line-height: 1.2;
+
+  /* Measure: body text never exceeds ~68 characters */
+  --measure: 34rem;
+  --measure-wide: 46rem;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-prose);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-ground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-color: var(--color-accent-dim);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+  }
+
+  a:hover {
+    text-decoration-color: var(--color-accent);
+  }
+}
