@@ -54,7 +54,8 @@ const { card, showKicker = true } = Astro.props;
         <Image
           src={card.image}
           alt={card.imageAlt ?? ''}
-          width={220}
+          widths={[160, 320, 480, 760]}
+          sizes="(min-width: 640px) 80px, calc(100vw - 2.5rem)"
           class="border-rule-faint h-32 w-full border object-cover sm:h-28 sm:w-20"
           loading="lazy"
         />

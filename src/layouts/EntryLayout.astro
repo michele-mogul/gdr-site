@@ -97,7 +97,10 @@ if (entry.collection === 'stories') {
           <Image
             src={card.image}
             alt={card.imageAlt ?? ''}
-            width={portrait ? 576 : 1200}
+            widths={portrait ? [288, 576] : [400, 800, 1200, 1472]}
+            sizes={
+              portrait ? '288px' : '(min-width: 768px) 736px, calc(100vw - 2.5rem)'
+            }
             class="border-rule-faint w-full border"
             loading="eager"
           />
