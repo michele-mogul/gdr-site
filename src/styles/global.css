@@ -6,24 +6,30 @@
  * every @theme variable generates the matching utilities
  * (--color-accent -> text-accent, bg-accent, border-accent...).
  *
- * Register: dark ground, warm ink, one accent, no gradients, no shadows.
- * Hierarchy comes from type, not from colour.
+ * Register: one accent, no gradients, no shadows. Hierarchy comes from
+ * type, not from colour.
+ *
+ * Both themes live in a single declaration each: light-dark(chiaro, scuro)
+ * resolves against the `color-scheme` in force further down, so there is no
+ * second palette to keep in sync. Dark stays the default; the system
+ * preference and the manual switch only change `color-scheme`.
  */
 @theme {
   /* Surfaces */
-  --color-ground: oklch(0.165 0.006 260);
-  --color-raised: oklch(0.205 0.007 260);
-  --color-rule: oklch(0.31 0.008 260);
-  --color-rule-faint: oklch(0.245 0.007 260);
+  --color-ground: light-dark(oklch(0.975 0.006 85), oklch(0.165 0.006 260));
+  --color-raised: light-dark(oklch(0.945 0.008 85), oklch(0.205 0.007 260));
+  --color-rule: light-dark(oklch(0.8 0.012 85), oklch(0.31 0.008 260));
+  --color-rule-faint: light-dark(oklch(0.885 0.008 85), oklch(0.245 0.007 260));
 
   /* Text */
-  --color-ink: oklch(0.925 0.012 85);
-  --color-ink-muted: oklch(0.72 0.012 85);
-  --color-ink-faint: oklch(0.58 0.01 85);
+  --color-ink: light-dark(oklch(0.24 0.014 70), oklch(0.925 0.012 85));
+  --color-ink-muted: light-dark(oklch(0.4 0.014 70), oklch(0.72 0.012 85));
+  --color-ink-faint: light-dark(oklch(0.53 0.012 70), oklch(0.58 0.01 85));
 
-  /* The single accent: links, rating, PDF button */
-  --color-accent: oklch(0.8 0.13 70);
-  --color-accent-dim: oklch(0.62 0.12 70);
+  /* The single accent: links, rating, PDF button.
+     Darker on paper, brighter on ink: same hue, readable on both. */
+  --color-accent: light-dark(oklch(0.52 0.14 55), oklch(0.8 0.13 70));
+  --color-accent-dim: light-dark(oklch(0.53 0.13 55), oklch(0.62 0.12 70));
 
   /* Serif for long-form, mono for metadata: two families, no more */
   --font-prose:
@@ -50,7 +56,27 @@
 }
 
 @layer base {
+  /*
+   * Which scheme is in force, in order of priority:
+   *   1. data-theme on <html>, written by the switch (persisted in localStorage)
+   *   2. the operating system, when it explicitly asks for light
+   *   3. dark, the default
+   */
   :root {
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme='dark']) {
+      color-scheme: light;
+    }
+  }
+
+  :root[data-theme='light'] {
+    color-scheme: light;
+  }
+
+  :root[data-theme='dark'] {
     color-scheme: dark;
   }
 
@@ -92,27 +118,30 @@
 
 /*
  * Long-form styling: @tailwindcss/typography, retuned on the site tokens.
- * Applied as `prose prose-invert prose-site` so the plugin's dark palette is
- * the starting point and these variables do the rest.
+ * Applied as `prose prose-site`.
  */
-/* Unlayered on purpose: the typography plugin's own rules sit in a cascade
- * layer, and unlayered CSS wins over layered CSS whatever the specificity. */
+/*
+ * Long-form styling. Unlayered on purpose: the typography plugin's own rules
+ * sit in a cascade layer, and unlayered CSS wins over layered CSS whatever the
+ * specificity. The values are the site tokens, so the text follows the theme
+ * without a `prose-invert` variant.
+ */
 .prose-site {
-  --tw-prose-invert-body: var(--color-ink-muted);
-  --tw-prose-invert-headings: var(--color-ink);
-  --tw-prose-invert-lead: var(--color-ink-muted);
-  --tw-prose-invert-links: var(--color-ink);
-  --tw-prose-invert-bold: var(--color-ink);
-  --tw-prose-invert-counters: var(--color-ink-faint);
-  --tw-prose-invert-bullets: var(--color-rule);
-  --tw-prose-invert-hr: var(--color-rule-faint);
-  --tw-prose-invert-quotes: var(--color-ink);
-  --tw-prose-invert-quote-borders: var(--color-accent-dim);
-  --tw-prose-invert-captions: var(--color-ink-faint);
-  --tw-prose-invert-code: var(--color-ink);
-  --tw-prose-invert-pre-bg: var(--color-raised);
-  --tw-prose-invert-th-borders: var(--color-rule);
-  --tw-prose-invert-td-borders: var(--color-rule-faint);
+  --tw-prose-body: var(--color-ink-muted);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-lead: var(--color-ink-muted);
+  --tw-prose-links: var(--color-ink);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-counters: var(--color-ink-faint);
+  --tw-prose-bullets: var(--color-rule);
+  --tw-prose-hr: var(--color-rule-faint);
+  --tw-prose-quotes: var(--color-ink);
+  --tw-prose-quote-borders: var(--color-accent-dim);
+  --tw-prose-captions: var(--color-ink-faint);
+  --tw-prose-code: var(--color-ink);
+  --tw-prose-pre-bg: var(--color-raised);
+  --tw-prose-th-borders: var(--color-rule);
+  --tw-prose-td-borders: var(--color-rule-faint);
 
   font-family: var(--font-prose);
   font-size: var(--text-base);

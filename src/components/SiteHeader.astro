@@ -1,6 +1,7 @@
 ---
 import { COLLECTIONS, COLLECTION_META, SITE } from '../config';
 import { href } from '../lib/href';
+import ThemeToggle from './ThemeToggle.astro';
 
 const current = Astro.url.pathname;
 const isActive = (path: string) => {
@@ -14,6 +15,7 @@ const isActive = (path: string) => {
     <a href={href("/")} class="font-meta text-meta tracking-[0.18em] text-ink uppercase no-underline">
       {SITE.title}
     </a>
+    <ThemeToggle />
     <nav aria-label="Sezioni del sito" class="font-meta text-meta flex flex-wrap gap-x-5 gap-y-2">
       {
         COLLECTIONS.map((collection) => (

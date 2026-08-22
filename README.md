@@ -252,6 +252,30 @@ schermo.
 
 ---
 
+## Tema chiaro e scuro
+
+Ordine di precedenza:
+
+1. la scelta fatta con l'interruttore in alto a destra (salvata in `localStorage`);
+2. il sistema operativo, se chiede esplicitamente il tema chiaro;
+3. scuro, che resta il default.
+
+Le due palette stanno in una dichiarazione sola per token, in `src/styles/global.css`:
+
+```css
+--color-ground: light-dark(oklch(0.975 0.006 85), oklch(0.165 0.006 260));
+```
+
+`light-dark()` sceglie in base al `color-scheme` in vigore, quindi non esiste una
+seconda palette da tenere allineata: per cambiare un colore si tocca una riga.
+
+Il tema è l'unica cosa sul sito che usa JavaScript: due script inline, uno nel `<head>`
+che applica la scelta salvata prima che la pagina venga disegnata (senza, si vedrebbe
+un lampo del tema sbagliato) e uno per il bottone. Non finiscono in nessun bundle.
+
+Contrasto misurato su entrambi i temi: titoli 15:1, testo corrente 8,6:1 (chiaro) e
+7,8:1 (scuro), metadati e tag ≥ 4,5:1 — sopra la soglia AA per il testo normale.
+
 ## Struttura
 
 ```

@@ -1,0 +1,64 @@
+---
+/**
+ * Light/dark switch.
+ *
+ * Dark is the default; the operating system's explicit "light" wins over it,
+ * and this button wins over both, remembering the choice in localStorage.
+ *
+ * It is the only interactive control on the site, so the script is inline and
+ * tiny (no framework, no bundle): reading the stored value has to happen
+ * before the first paint, which rules out a deferred module.
+ */
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  class="font-meta text-meta text-ink-faint hover:text-accent ms-auto cursor-pointer sm:order-last lowercase tracking-wide"
+  aria-live="polite"
+>
+  <span id="theme-toggle-label">tema</span>
+</button>
+
+<script is:inline>
+  (() => {
+    const root = document.documentElement;
+    const button = document.getElementById('theme-toggle');
+    const label = document.getElementById('theme-toggle-label');
+    if (!button || !label) return;
+
+    // What is on screen right now, whether it comes from the stored choice,
+    // the system preference or the default.
+    const current = () =>
+      root.dataset.theme ??
+      (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+    const render = () => {
+      const now = current();
+      // The label names the destination, not the current state.
+      label.textContent = now === 'light' ? 'scuro' : 'chiaro';
+      button.setAttribute(
+        'aria-label',
+        now === 'light' ? 'Passa al tema scuro' : 'Passa al tema chiaro',
+      );
+    };
+
+    button.addEventListener('click', () => {
+      const next = current() === 'light' ? 'dark' : 'light';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {
+        // Private mode or storage disabled: the choice just lasts this page.
+      }
+      render();
+    });
+
+    // Follow the system while no explicit choice has been made.
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+      if (!root.dataset.theme) render();
+    });
+
+    render();
+  })();
+</script>
