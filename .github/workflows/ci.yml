@@ -1,0 +1,22 @@
+name: Controlli
+
+# Type checking and a full build on pull requests, so a malformed content file
+# is caught before it reaches main.
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # astro check + astro build: schemi Zod, tipi e rendering.
+      - run: npm run build

@@ -1,0 +1,64 @@
+name: Deploy su Cloudflare Pages
+
+# Builds and deploys to Cloudflare Pages on every push to main.
+#
+# Until the two secrets exist the job stops at the first step with a notice
+# instead of failing, so a half-configured repository never shows a red X.
+#
+# Required secrets (Settings -> Secrets and variables -> Actions):
+#   CLOUDFLARE_API_TOKEN    token with the "Cloudflare Pages: Edit" permission
+#   CLOUDFLARE_ACCOUNT_ID   account id, from the Cloudflare dashboard URL
+# Optional variable:
+#   PUBLIC_SITE_URL         production origin, e.g. https://esempio.it
+#                           (defaults to the value in src/config.ts)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cloudflare-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - id: guard
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$ACCOUNT" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Secret Cloudflare assenti: deploy saltato."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@v4
+
+      - if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - if: steps.guard.outputs.configured == 'true'
+        run: npm ci
+
+      # Root of a domain here, unlike the GitHub Pages preview.
+      - if: steps.guard.outputs.configured == 'true'
+        run: npm run build
+        env:
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          BASE_PATH: /
+
+      - if: steps.guard.outputs.configured == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=gdr-site --branch=main
